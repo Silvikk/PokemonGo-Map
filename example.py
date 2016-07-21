@@ -852,7 +852,7 @@ def get_pokemarkers():
         'key': 'start-position',
         'disappear_time': -1
     }]
-    print pokemons
+
     for pokemon_key in pokemons.keys():
         pokemon = pokemons[pokemon_key]
         datestr = datetime.fromtimestamp(pokemon[
@@ -881,7 +881,7 @@ def get_pokemarkers():
             'infobox': label
         })
 
-    for gym_key in gyms:
+    for gym_key in gyms.keys():
         gym = gyms[gym_key]
         if gym[0] == 0:
             color = "rgba(0,0,0,.4)"
@@ -902,7 +902,7 @@ def get_pokemarkers():
             'lng': gym[2],
             'infobox': "<div><center><small>Gym owned by:</small><br><b style='color:" + color + "'>Team " + numbertoteam[gym[0]] + "</b><br><img id='" + numbertoteam[gym[0]] + "' height='100px' src='"+icon+"'><br>Prestige: " + str(gym[3]) + "</center>"
         })
-    for stop_key in pokestops:
+    for stop_key in pokestops.keys():
         stop = pokestops[stop_key]
         if stop[2] > 0:
             pokeMarkers.append({
