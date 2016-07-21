@@ -25,7 +25,7 @@ import pymongo
 from pymongo import MongoClient, GEO2D
 from bson.son import SON
 from bson.json_util import dumps
-from multiprocessing import Pool
+from multiprocessing import Pool, Manager
 from google.protobuf.internal import encoder
 from google.protobuf.message import DecodeError
 from s2sphere import *
@@ -74,9 +74,6 @@ NEXT_LONG = 0
 auto_refresh = 0
 default_step = 0.001
 api_endpoint = None
-pokemons = {}
-gyms = {}
-pokestops = {}
 numbertoteam = {  # At least I'm pretty sure that's it. I could be wrong and then I'd be displaying the wrong owner team of gyms.
     0: 'Gym',
     1: 'Mystic',
@@ -91,6 +88,10 @@ db = client['test']
 db.pokemons.create_index("expire_at", expireAfterSeconds=1)
 db.pokemons.create_index([("location", pymongo.GEOSPHERE )])
 pool = Pool()
+manager = Manager()
+pokemons = manager.dict()
+gyms = manager.dict()
+pokestops = manager.dict()
 
 # stuff for in-background search thread
 
@@ -851,8 +852,8 @@ def get_pokemarkers():
         'key': 'start-position',
         'disappear_time': -1
     }]
-
-    for pokemon_key in pokemons:
+    print pokemons
+    for pokemon_key in pokemons.keys():
         pokemon = pokemons[pokemon_key]
         datestr = datetime.fromtimestamp(pokemon[
             'disappear_time'])
